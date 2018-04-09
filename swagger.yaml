@@ -1,0 +1,4612 @@
+---
+swagger: '2.0'
+info:
+  description: Create, view and manage e-Research projects and services used by projects.
+  version: '0.1'
+  title: Research Project Management API
+  contact:
+    name: Centre for eResearch
+    email: m.feller@auckland.ac.nz
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+basePath: "/projectcentre-0.1"
+tags:
+- name: Person
+  description: Operations on persons
+- name: Project
+  description: Operations on projects
+- name: Service
+  description: Operations on services
+- name: Utilities
+  description: Miscellaneous util operations
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  "/api/person":
+    get:
+      tags:
+      - Person
+      summary: get list of persons
+      operationId: controller.person.get_persons
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/PersonGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Person
+      summary: create new person
+      operationId: controller.person.create_person
+      parameters:
+      - in: body
+        name: newPerson
+        description: newPerson
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/person/findByIdentity/{identity}":
+    get:
+      tags:
+      - Person
+      summary: get existing person by identity, e.g. UPI
+      operationId: controller.person.find_person_by_identity
+      parameters:
+      - name: identity
+        in: path
+        description: identity
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/PersonGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/person/{personId}":
+    get:
+      tags:
+      - Person
+      summary: get existing person
+      operationId: controller.person.get_person
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/PersonGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Person
+      summary: update existing person
+      operationId: controller.person.update_person
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: projectUpdate
+        description: projectUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Person
+      summary: delete existing person
+      operationId: controller.person.delete_person
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Person
+      summary: patch existing person. same fields like in PUT can be updated
+      operationId: controller.person.patch_person
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/person/{personId}/affiliation":
+    get:
+      tags:
+      - Person
+      summary: get all affiliations of a person
+      operationId: controller.person.get_person_affiliations
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/PersonAffiliationGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Person
+      summary: add affiliation to person
+      operationId: controller.person.create_person_affiliation
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: newAffiliation
+        description: newAffiliation
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonAffiliationPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/person/{personId}/affiliation/{affiliationId}":
+    get:
+      tags:
+      - Person
+      summary: get existing person affiliation
+      operationId: controller.person.get_person_affiliation
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: affiliationId
+        in: path
+        description: affiliationId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/PersonAffiliationGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Person
+      summary: update existing person affiliation
+      operationId: controller.person.update_person_affiliation
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: affiliationId
+        in: path
+        description: affiliationId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: personAffiliationUpdate
+        description: personAffiliationUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonAffiliationPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Person
+      summary: remove existing person affiliation
+      operationId: controller.person.delete_person_affiliation
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: affiliationId
+        in: path
+        description: affiliationId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Person
+      summary: patch existing person affiliation. same input fields like in PUT can
+        be updated
+      operationId: controller.person.patch_person_affiliation
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: affiliationId
+        in: path
+        description: affiliationId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonAffiliationPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/person/{personId}/projects":
+    get:
+      tags:
+      - Person
+      summary: get all projects of a person
+      operationId: controller.person.get_person_projects
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectMemberGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/person/{personId}/property":
+    get:
+      tags:
+      - Person
+      summary: get all properties of a person
+      operationId: controller.person.get_person_properties
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/PersonPropertyGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Person
+      summary: add property to person
+      operationId: controller.person.create_person_property
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: newProperty
+        description: newProperty
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonPropertyPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/person/{personId}/property/{propertyId}":
+    get:
+      tags:
+      - Person
+      summary: get existing person property
+      operationId: controller.person.get_person_property
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/PersonPropertyGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Person
+      summary: update existing person property
+      operationId: controller.person.update_person_property
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: propertyUpdate
+        description: propertyUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonPropertyPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Person
+      summary: remove existing person property
+      operationId: controller.person.delete_person_property
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Person
+      summary: patch existing person property. same input fields like in PUT can be
+        updated
+      operationId: controller.person.patch_person_property
+      parameters:
+      - name: personId
+        in: path
+        description: personId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/PersonPropertyPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project":
+    get:
+      tags:
+      - Project
+      summary: get list of projects
+      operationId: controller.project.get_projects
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Project
+      summary: create new project
+      operationId: controller.project.create_project
+      parameters:
+      - in: body
+        name: newProject
+        description: newProject
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/findByCode/{projectCode}":
+    get:
+      tags:
+      - Project
+      summary: get existing project by code
+      operationId: controller.project.find_project_by_code
+      parameters:
+      - name: projectCode
+        in: path
+        description: projectCode
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/wrapper/findByCode/{projectCode}":
+    get:
+      tags:
+      - Project
+      summary: get a wrapper object of a project by code
+      operationId: controller.project.find_project_wrapper_by_code
+      parameters:
+      - name: projectCode
+        in: path
+        description: projectCode
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectWrapper"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/wrapper/{projectId}":
+    get:
+      tags:
+      - Project
+      summary: get a wrapper object of a project
+      operationId: controller.project.get_project_wrapper
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectWrapper"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}":
+    get:
+      tags:
+      - Project
+      summary: get existing project
+      operationId: controller.project.get_project
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Project
+      summary: update existing project
+      operationId: controller.project.update_project
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: projectUpdate
+        description: projectUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Project
+      summary: delete existing project
+      operationId: controller.project.delete_project
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Project
+      summary: patch existing project. same fields like in PUT can be updated
+      operationId: controller.project.patch_project
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/action":
+    get:
+      tags:
+      - Project
+      summary: get list of project actions
+      operationId: controller.project.get_project_actions
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectActionGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Project
+      summary: create new project action
+      operationId: controller.project.create_project_action
+      parameters:
+      - in: body
+        name: newProjectAction
+        description: newProjectAction
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectActionPost"
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/action/{actionId}":
+    get:
+      tags:
+      - Project
+      summary: get existing project action
+      operationId: controller.project.get_project_action
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: actionId
+        in: path
+        description: actionId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectActionGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Project
+      summary: update existing project action
+      operationId: controller.project.update_project_action
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: actionId
+        in: path
+        description: actionId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: projectActionUpdate
+        description: projectActionUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectActionPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Project
+      summary: delete existing project action
+      operationId: controller.project.delete_project_action
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: actionId
+        in: path
+        description: actionId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Project
+      summary: patch existing project action. same fields like in PUT can be updated
+      operationId: controller.project.patch_project_action
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: actionId
+        in: path
+        description: actionId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectActionPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/division":
+    post:
+      tags:
+      - Project
+      summary: add division to project
+      operationId: controller.project.create_project_division
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: newDivision
+        description: newDivision
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectDivisionPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/division/{divisionId}":
+    delete:
+      tags:
+      - Project
+      summary: remove existing project division
+      operationId: controller.project.delete_project_division
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: divisionId
+        in: path
+        description: divisionId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/externalreference":
+    get:
+      tags:
+      - Project
+      summary: get all external references of project
+      operationId: controller.project.get_project_ext_refs
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectExternalReferenceGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Project
+      summary: add external reference to project
+      operationId: controller.project.create_project_ext_ref
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: newExternalReference
+        description: newExternalReference
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectExternalReferencePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/externalreference/{extRefId}":
+    get:
+      tags:
+      - Project
+      summary: get existing external reference
+      operationId: controller.project.get_project_ext_ref
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: extRefId
+        in: path
+        description: extRefId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectExternalReferenceGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Project
+      summary: update existing external reference
+      operationId: controller.project.update_project_ext_ref
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: extRefId
+        in: path
+        description: extRefId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: externalReferenceUpdate
+        description: externalReferenceUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectExternalReferencePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Project
+      summary: remove existing external reference
+      operationId: controller.project.delete_project_ext_ref
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: extRefId
+        in: path
+        description: extRefId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Project
+      summary: patch existing external reference. same input fields like in PUT can
+        be updated
+      operationId: controller.project.patch_project_ext_ref
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: extRefId
+        in: path
+        description: extRefId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectExternalReferencePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/member":
+    get:
+      tags:
+      - Project
+      summary: get all members of project
+      operationId: controller.project.get_project_members
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectMemberGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Project
+      summary: add member to project
+      operationId: controller.project.create_project_member
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: newProjectMember
+        description: newProjectMember
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectMemberPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/member/{memberId}":
+    get:
+      tags:
+      - Project
+      summary: get existing project member
+      operationId: controller.project.get_project_member
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: memberId
+        in: path
+        description: memberId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectMemberGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Project
+      summary: update existing project member
+      operationId: controller.project.update_project_member
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: memberId
+        in: path
+        description: memberId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: projectMemberUpdate
+        description: projectMemberUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectMemberPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Project
+      summary: remove existing project member
+      operationId: controller.project.delete_project_member
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: memberId
+        in: path
+        description: memberId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Project
+      summary: patch existing project member. same input fields like in PUT can be
+        updated
+      operationId: controller.project.patch_project_member
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: memberId
+        in: path
+        description: memberId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectMemberPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/property":
+    get:
+      tags:
+      - Project
+      summary: get all properties of a project
+      operationId: controller.project.get_project_properties
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ProjectPropertyGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Project
+      summary: add property to project
+      operationId: controller.project.create_project_property
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: newProperty
+        description: newProperty
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectPropertyPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/property/{propertyId}":
+    get:
+      tags:
+      - Project
+      summary: get existing project property
+      operationId: controller.project.get_project_property
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ProjectPropertyGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Project
+      summary: update existing project property
+      operationId: controller.project.update_project_property
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: propertyUpdate
+        description: propertyUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectPropertyPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Project
+      summary: remove existing project property
+      operationId: controller.project.delete_project_property
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Project
+      summary: patch existing project property. same input fields like in PUT can
+        be updated
+      operationId: controller.project.patch_project_property
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: propertyId
+        in: path
+        description: propertyId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ProjectPropertyPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/researchoutput":
+    get:
+      tags:
+      - Project
+      summary: get list of research outputs
+      operationId: controller.project.get_project_researchoutputs
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ResearchOutputGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Project
+      summary: create new research output
+      operationId: controller.project.create_project_researchoutput
+      parameters:
+      - in: body
+        name: newResearchOutput
+        description: newResearchOutput
+        required: true
+        schema:
+          "$ref": "#/definitions/ResearchOutputPost"
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/researchoutput/{researchOutputId}":
+    get:
+      tags:
+      - Project
+      summary: get existing research output
+      operationId: controller.project.get_project_researchoutput
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: researchOutputId
+        in: path
+        description: researchOutputId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ResearchOutputGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Project
+      summary: update existing research output
+      operationId: controller.project.update_project_researchoutput
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: researchOutputId
+        in: path
+        description: researchOutputId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: researchOutputUpdate
+        description: researchOutputUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ResearchOutputPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Project
+      summary: delete existing research output
+      operationId: controller.project.delete_project_researchoutput
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: researchOutputId
+        in: path
+        description: researchOutputId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Project
+      summary: patch existing research output. same fields like in PUT can be updated
+      operationId: controller.project.patch_project_researchoutput
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: researchOutputId
+        in: path
+        description: researchOutputId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ResearchOutputPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/service":
+    get:
+      tags:
+      - Project
+      summary: get list of service instances
+      operationId: controller.project.get_project_service_instances
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ServiceInstanceGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Project
+      summary: create new service instance
+      operationId: controller.project.create_project_service_instance
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: newServiceInstance
+        description: newServiceInstance
+        required: true
+        schema:
+          "$ref": "#/definitions/ServiceInstancePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/project/{projectId}/service/{serviceId}":
+    get:
+      tags:
+      - Project
+      summary: get existing service instance
+      operationId: controller.project.get_project_service_instance
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: serviceId
+        in: path
+        description: serviceId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ServiceInstanceGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Project
+      summary: update existing service instance
+      operationId: controller.project.update_project_service_instance
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: serviceId
+        in: path
+        description: serviceId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: serviceInstanceUpdate
+        description: serviceInstanceUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ServiceInstancePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Project
+      summary: delete existing service instance
+      operationId: controller.project.delete_project_service_instance
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: serviceId
+        in: path
+        description: serviceId
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Project
+      summary: patch existing service instance. same fields like in PUT can be updated
+      operationId: controller.project.patch_project_service_instance
+      parameters:
+      - name: projectId
+        in: path
+        description: projectId
+        required: true
+        type: integer
+        format: int32
+      - name: serviceId
+        in: path
+        description: serviceId
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ServiceInstancePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/service":
+    get:
+      tags:
+      - Service
+      summary: get list of services
+      operationId: controller.service.get_services
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ServiceGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/service/schema":
+    get:
+      tags:
+      - Service
+      summary: get list of service schemas
+      operationId: controller.service.get_service_schemas
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ServiceSchemaGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Service
+      summary: create new service schema
+      operationId: controller.service.create_service_schema
+      parameters:
+      - in: body
+        name: newServiceSchema
+        description: newServiceSchema
+        required: true
+        schema:
+          "$ref": "#/definitions/ServiceSchemaPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/service/schema/{id}":
+    get:
+      tags:
+      - Service
+      summary: get existing service schema
+      operationId: controller.service.get_service_schema
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ServiceSchemaGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Service
+      summary: update existing service schema
+      operationId: controller.service.update_service_schema
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: serviceSchemaUpdate
+        description: serviceSchemaUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/ServiceSchemaPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Service
+      summary: delete existing service schema
+      operationId: controller.service.delete_service_schema
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Service
+      summary: patch existing service schema. same fields like in PUT can be updated
+      operationId: controller.service.patch_service_schema
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/ServiceSchemaPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/division":
+    get:
+      tags:
+      - Utilities
+      summary: get all divisions
+      operationId: controller.util.get_divisions
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/DivisionGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new division
+      operationId: controller.util.create_division
+      parameters:
+      - in: body
+        name: newDivision
+        description: newDivision
+        required: true
+        schema:
+          "$ref": "#/definitions/DivisionPost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/division/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing division
+      operationId: controller.util.get_division
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/DivisionGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing division
+      operationId: controller.util.update_division
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: divisionUpdate
+        description: divisionUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/DivisionPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing division
+      operationId: controller.util.delete_division
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    patch:
+      tags:
+      - Utilities
+      summary: patch existing division. same input fields like in PUT can be updated
+      operationId: controller.util.patch_division
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: params
+        description: params
+        required: true
+        schema:
+          "$ref": "#/definitions/DivisionPut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/divisionalrole":
+    get:
+      tags:
+      - Utilities
+      summary: get all divisional role options
+      operationId: controller.util.get_divisional_role_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new divisional role option
+      operationId: controller.util.create_divisional_role_option
+      parameters:
+      - in: body
+        name: newDivisionalRole
+        description: newDivisionalRole
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/divisionalrole/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing divisional role option
+      operationId: controller.util.get_divisional_role_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing divisional role option
+      operationId: controller.util.update_divisional_role_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: divisionalRoleUpdate
+        description: divisionalRoleUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing divisional role option
+      operationId: controller.util.delete_divisional_role_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/facility":
+    get:
+      tags:
+      - Utilities
+      summary: get all facilities
+      operationId: controller.util.get_facilities
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new facility
+      operationId: controller.util.create_facility
+      parameters:
+      - in: body
+        name: newFacility
+        description: newFacility
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/facility/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing facility
+      operationId: controller.util.get_facility
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing facility
+      operationId: controller.util.update_facility
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: facilityUpdate
+        description: facilityUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing facility
+      operationId: controller.util.delete_facility
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/personrole":
+    get:
+      tags:
+      - Utilities
+      summary: get all person role options
+      operationId: controller.util.get_person_role_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new person role option
+      operationId: controller.util.create_person_role_option
+      parameters:
+      - in: body
+        name: newPersonRole
+        description: newPersonRole
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/personrole/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing person role option
+      operationId: controller.util.get_person_role_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing person role option
+      operationId: controller.util.update_person_role_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: personRoleUpdate
+        description: personRoleUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing person role option
+      operationId: controller.util.delete_person_role_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/personstatus":
+    get:
+      tags:
+      - Utilities
+      summary: get all person status options
+      operationId: controller.util.get_person_status_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new person status option
+      operationId: controller.util.create_person_status_option
+      parameters:
+      - in: body
+        name: newPersonStatus
+        description: newPersonStatus
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/personstatus/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing person status option
+      operationId: controller.util.get_person_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing person status option
+      operationId: controller.util.update_person_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: personStatusUpdate
+        description: personStatusUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing person status option
+      operationId: controller.util.delete_person_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/projectactiontype":
+    get:
+      tags:
+      - Utilities
+      summary: get all project action type options
+      operationId: controller.util.get_project_action_type_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new project action type option
+      operationId: controller.util.create_project_action_type_option
+      parameters:
+      - in: body
+        name: newProjectActionType
+        description: newProjectActionType
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/projectactiontype/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing project action type option
+      operationId: controller.util.get_project_action_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing project action type option
+      operationId: controller.util.update_project_action_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: projectActionTypeUpdate
+        description: projectActionTypeUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing project action type option
+      operationId: controller.util.delete_project_action_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/projectstatus":
+    get:
+      tags:
+      - Utilities
+      summary: get all project status options
+      operationId: controller.util.get_project_status_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new project status option
+      operationId: controller.util.create_project_status_option
+      parameters:
+      - in: body
+        name: newProjectStatus
+        description: newProjectStatus
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/projectstatus/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing project status option
+      operationId: controller.util.get_project_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing project status option
+      operationId: controller.util.update_project_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: projectStatusUpdate
+        description: projectStatusUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing project status option
+      operationId: controller.util.delete_project_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/projecttype":
+    get:
+      tags:
+      - Utilities
+      summary: get all project type options
+      operationId: controller.util.get_project_type_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new project type option
+      operationId: controller.util.create_project_type_option
+      parameters:
+      - in: body
+        name: newProjectType
+        description: newProjectType
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/projecttype/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing project type option
+      operationId: controller.util.get_project_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing project type option
+      operationId: controller.util.update_project_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: projectTypeUpdate
+        description: projectTypeUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing project type option
+      operationId: controller.util.delete_project_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/researchoutputtype":
+    get:
+      tags:
+      - Utilities
+      summary: get all research output type options
+      operationId: controller.util.get_research_output_type_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new research output type option
+      operationId: controller.util.create_research_output_type_option
+      parameters:
+      - in: body
+        name: newResearchOutputType
+        description: newResearchOutputType
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/researchoutputtype/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing research output type option
+      operationId: controller.util.get_research_output_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing research output type option
+      operationId: controller.util.update_research_output_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: researchOutputTypeUpdate
+        description: researchOutputTypeUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing research output type option
+      operationId: controller.util.delete_research_output_type_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/serviceinstancestatus":
+    get:
+      tags:
+      - Utilities
+      summary: get all service instance status options
+      operationId: controller.util.get_service_instance_status_options
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    post:
+      tags:
+      - Utilities
+      summary: create new service instance status option
+      operationId: controller.util.create_service_instance_status_option
+      parameters:
+      - in: body
+        name: newServiceInstanceStatus
+        description: newServiceInstanceStatus
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePost"
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  "/api/util/serviceinstancestatus/{id}":
+    get:
+      tags:
+      - Utilities
+      summary: get existing service instance status option
+      operationId: controller.util.get_service_instance_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/IdNameTypeGet"
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    put:
+      tags:
+      - Utilities
+      summary: update existing service instance status option
+      operationId: controller.util.update_service_instance_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      - in: body
+        name: serviceInstanceStatusUpdate
+        description: serviceInstanceStatusUpdate
+        required: true
+        schema:
+          "$ref": "#/definitions/IdNameTypePut"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+    delete:
+      tags:
+      - Utilities
+      summary: remove existing service instance status option
+      operationId: controller.util.delete_service_instance_status_option
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No or invalid authentication
+        '403':
+          description: Not permitted to access for users role
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+definitions:
+  DivisionGet:
+    type: object
+    required:
+    - code
+    - id
+    - name
+    - parent
+    properties:
+      code:
+        type: string
+        description: division code
+      id:
+        type: integer
+        format: int32
+        description: division id
+      name:
+        type: string
+        description: division name
+      parent:
+        description: parent division, if applicable
+        "$ref": "#/definitions/DivisionGet"
+    title: DivisionGet
+  DivisionPost:
+    type: object
+    required:
+    - code
+    - name
+    properties:
+      code:
+        type: string
+        description: division code
+      name:
+        type: string
+        description: division name
+      parentId:
+        type: integer
+        format: int32
+        description: parent division id, if applicable
+    title: DivisionPost
+  DivisionPut:
+    type: object
+    required:
+    - code
+    - name
+    properties:
+      code:
+        type: string
+        description: division code
+      name:
+        type: string
+        description: division name
+      parentId:
+        type: integer
+        format: int32
+        description: parent division id, if applicable
+    title: DivisionPut
+  IdNameTypeGet:
+    type: object
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: id
+      name:
+        type: string
+        description: name
+    title: IdNameTypeGet
+  IdNameTypePost:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        description: name
+    title: IdNameTypePost
+  IdNameTypePut:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        description: name
+    title: IdNameTypePut
+  JsonNode:
+    type: object
+    properties:
+      array:
+        type: boolean
+      bigDecimal:
+        type: boolean
+      bigInteger:
+        type: boolean
+      binary:
+        type: boolean
+      boolean:
+        type: boolean
+      containerNode:
+        type: boolean
+      double:
+        type: boolean
+      float:
+        type: boolean
+      floatingPointNumber:
+        type: boolean
+      int:
+        type: boolean
+      integralNumber:
+        type: boolean
+      long:
+        type: boolean
+      missingNode:
+        type: boolean
+      nodeType:
+        type: string
+        enum:
+        - ARRAY
+        - BINARY
+        - BOOLEAN
+        - MISSING
+        - 'NULL'
+        - NUMBER
+        - OBJECT
+        - POJO
+        - STRING
+      'null':
+        type: boolean
+      number:
+        type: boolean
+      object:
+        type: boolean
+      pojo:
+        type: boolean
+      short:
+        type: boolean
+      textual:
+        type: boolean
+      valueNode:
+        type: boolean
+    title: JsonNode
+  PersonAffiliationGet:
+    type: object
+    required:
+    - division
+    - divisionalRole
+    - id
+    properties:
+      division:
+        description: division
+        "$ref": "#/definitions/DivisionGet"
+      divisionalRole:
+        type: string
+        description: name of divisional role
+      id:
+        type: integer
+        format: int32
+        description: affiliation id
+    title: PersonAffiliationGet
+  PersonAffiliationPost:
+    type: object
+    required:
+    - divisionId
+    - divisionalRole
+    properties:
+      divisionId:
+        type: integer
+        format: int32
+        description: division id
+      divisionalRole:
+        type: string
+        description: name of divisional role
+    title: PersonAffiliationPost
+  PersonAffiliationPut:
+    type: object
+    required:
+    - divisionId
+    - divisionalRole
+    properties:
+      divisionId:
+        type: integer
+        format: int32
+        description: division id
+      divisionalRole:
+        type: string
+        description: name of divisional role
+    title: PersonAffiliationPut
+  PersonGet:
+    type: object
+    required:
+    - affiliations
+    - email
+    - fullName
+    - id
+    - phone
+    - startDate
+    - status
+    properties:
+      affiliations:
+        type: array
+        description: List of affiliations of person
+        items:
+          "$ref": "#/definitions/PersonAffiliationGet"
+      email:
+        type: string
+        description: person e-mail
+      endDate:
+        type: string
+        description: last day, if person leaves the organization
+      fullName:
+        type: string
+        description: person full name
+      id:
+        type: integer
+        format: int32
+        description: person id
+      notes:
+        type: string
+        description: notes about the person
+      phone:
+        type: string
+        description: person phone
+      pictureUrl:
+        type: string
+        description: url to picture of person
+      preferredName:
+        type: string
+        description: preferred name
+      startDate:
+        type: string
+        description: Date when person profile is created
+      status:
+        type: string
+        description: person status
+    title: PersonGet
+  PersonPost:
+    type: object
+    required:
+    - email
+    - fullName
+    - phone
+    - startDate
+    - status
+    properties:
+      affiliations:
+        type: array
+        description: List of affiliations of person.
+        items:
+          "$ref": "#/definitions/PersonAffiliationPost"
+      email:
+        type: string
+        description: person e-mail
+      endDate:
+        type: string
+        description: last day, if person leaves the organization
+      fullName:
+        type: string
+        description: person full name
+      notes:
+        type: string
+        description: notes about the person
+      phone:
+        type: string
+        description: person phone
+      pictureUrl:
+        type: string
+        description: url to picture of person
+      preferredName:
+        type: string
+        description: preferred name
+      startDate:
+        type: string
+        description: Date when person profile is created
+      status:
+        type: string
+        description: person status
+    title: PersonPost
+  PersonPropertyGet:
+    type: object
+    required:
+    - id
+    - propname
+    - propvalue
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: person property id
+      propname:
+        type: string
+        description: property name
+      propvalue:
+        type: string
+        description: property value
+    title: PersonPropertyGet
+  PersonPropertyPost:
+    type: object
+    required:
+    - personId
+    - propname
+    - propvalue
+    properties:
+      personId:
+        type: integer
+        format: int32
+        description: person id
+      propname:
+        type: string
+        description: property name
+      propvalue:
+        type: string
+        description: property value
+    title: PersonPropertyPost
+  PersonPropertyPut:
+    type: object
+    required:
+    - propname
+    - propvalue
+    properties:
+      propname:
+        type: string
+        description: property name
+      propvalue:
+        type: string
+        description: property value
+    title: PersonPropertyPut
+  PersonPut:
+    type: object
+    required:
+    - email
+    - fullName
+    - phone
+    - startDate
+    - status
+    properties:
+      email:
+        type: string
+        description: person e-mail
+      endDate:
+        type: string
+        description: last day, if person leaves the organization
+      fullName:
+        type: string
+        description: person full name
+      notes:
+        type: string
+        description: notes about the person
+      phone:
+        type: string
+        description: person phone
+      pictureUrl:
+        type: string
+        description: url to picture of person
+      preferredName:
+        type: string
+        description: preferred name
+      startDate:
+        type: string
+        description: Date when person profile is created
+      status:
+        type: string
+        description: person status
+    title: PersonPut
+  ProjectActionGet:
+    type: object
+    required:
+    - actionType
+    - date
+    - id
+    - notes
+    - personId
+    - personName
+    properties:
+      actionType:
+        type: string
+        description: type of action
+      date:
+        type: string
+        description: 'date of action (format: yyyy-mm-dd)'
+      id:
+        type: integer
+        format: int32
+        description: action id
+      notes:
+        type: string
+        description: notes about action
+      personId:
+        type: integer
+        format: int32
+        description: id of person who performed the action
+      personName:
+        type: string
+        description: name of person who performed the action
+    title: ProjectActionGet
+  ProjectActionPost:
+    type: object
+    required:
+    - actionType
+    - date
+    - notes
+    - personId
+    properties:
+      actionType:
+        type: string
+        description: type of action
+      date:
+        type: string
+        description: 'date of action (format: yyyy-mm-dd)'
+      notes:
+        type: string
+        description: notes about action
+      personId:
+        type: integer
+        format: int32
+        description: id of person who performed the action
+    title: ProjectActionPost
+  ProjectActionPut:
+    type: object
+    required:
+    - actionType
+    - date
+    - notes
+    - personId
+    properties:
+      actionType:
+        type: string
+        description: type of action
+      date:
+        type: string
+        description: 'date of action (format: yyyy-mm-dd)'
+      notes:
+        type: string
+        description: notes about action
+      personId:
+        type: integer
+        format: int32
+        description: id of person who performed the action
+    title: ProjectActionPut
+  ProjectDivisionGet:
+    type: object
+    required:
+    - division
+    - id
+    properties:
+      division:
+        description: division
+        "$ref": "#/definitions/DivisionGet"
+      id:
+        type: integer
+        format: int32
+        description: project division id
+    title: ProjectDivisionGet
+  ProjectDivisionPost:
+    type: object
+    required:
+    - divisionId
+    properties:
+      divisionId:
+        type: integer
+        format: int32
+        description: division id
+    title: ProjectDivisionPost
+  ProjectExternalReferenceGet:
+    type: object
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+        format: int32
+      reference:
+        type: string
+    title: ProjectExternalReferenceGet
+  ProjectExternalReferencePost:
+    type: object
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      reference:
+        type: string
+    title: ProjectExternalReferencePost
+  ProjectExternalReferencePut:
+    type: object
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      reference:
+        type: string
+    title: ProjectExternalReferencePut
+  ProjectGet:
+    type: object
+    required:
+    - code
+    - description
+    - divisions
+    - id
+    - startDate
+    - status
+    - title
+    - type
+    properties:
+      code:
+        type: string
+        description: project code
+      description:
+        type: string
+        description: project description
+      divisions:
+        type: array
+        description: list of division ids
+        items:
+          "$ref": "#/definitions/ProjectDivisionGet"
+      endDate:
+        type: string
+        description: 'Last day of project (format: yyyy-mm-dd)'
+      id:
+        type: integer
+        format: int32
+        description: project id
+      nextReviewDate:
+        type: string
+        description: 'Next review date of project (format: yyyy-mm-dd)'
+      notes:
+        type: string
+        description: project notes
+      requirements:
+        type: string
+        description: project requirements
+      startDate:
+        type: string
+        description: 'First day of project (format: yyyy-mm-dd)'
+      status:
+        type: string
+        description: project status
+      title:
+        type: string
+        description: project title
+      todo:
+        type: string
+        description: project todo
+      type:
+        type: string
+        description: project type
+    title: ProjectGet
+  ProjectMemberGet:
+    type: object
+    required:
+    - id
+    - role
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: membership id
+      notes:
+        type: string
+        description: notes about project member
+      person:
+        description: person on project
+        "$ref": "#/definitions/PersonGet"
+      project:
+        description: project
+        "$ref": "#/definitions/ProjectGet"
+      role:
+        type: string
+        description: role of person on project
+    title: ProjectMemberGet
+  ProjectMemberPost:
+    type: object
+    required:
+    - personId
+    - role
+    properties:
+      notes:
+        type: string
+        description: notes about project member
+      personId:
+        type: integer
+        format: int32
+        description: person id
+      role:
+        type: string
+        description: role of person on project
+    title: ProjectMemberPost
+  ProjectMemberPut:
+    type: object
+    required:
+    - role
+    properties:
+      notes:
+        type: string
+        description: notes about project member
+      role:
+        type: string
+        description: role of person on project
+    title: ProjectMemberPut
+  ProjectPost:
+    type: object
+    required:
+    - code
+    - description
+    - startDate
+    - status
+    - title
+    - type
+    properties:
+      code:
+        type: string
+        description: project code
+      description:
+        type: string
+        description: project description
+      divisionIds:
+        type: array
+        description: list of division ids
+        items:
+          type: integer
+          format: int32
+      endDate:
+        type: string
+        description: 'Last day of project (format: yyyy-mm-dd)'
+      nextReviewDate:
+        type: string
+        description: 'Next review date of project (format: yyyy-mm-dd)'
+      notes:
+        type: string
+        description: project notes
+      requirements:
+        type: string
+        description: project requirements
+      startDate:
+        type: string
+        description: 'First day of project (format: yyyy-mm-dd)'
+      status:
+        type: string
+        description: project status
+      title:
+        type: string
+        description: project title
+      todo:
+        type: string
+        description: project todo
+      type:
+        type: string
+        description: project type
+    title: ProjectPost
+  ProjectPropertyGet:
+    type: object
+    required:
+    - facility
+    - id
+    - propname
+    - propvalue
+    properties:
+      facility:
+        type: string
+        description: facility id
+      id:
+        type: integer
+        format: int32
+        description: property id
+      propname:
+        type: string
+        description: property name
+      propvalue:
+        type: string
+        description: property value
+    title: ProjectPropertyGet
+  ProjectPropertyPost:
+    type: object
+    required:
+    - facility
+    - propname
+    - propvalue
+    properties:
+      facility:
+        type: string
+        description: facility id
+      propname:
+        type: string
+        description: property name
+      propvalue:
+        type: string
+        description: property value
+    title: ProjectPropertyPost
+  ProjectPropertyPut:
+    type: object
+    required:
+    - facility
+    - propname
+    - propvalue
+    properties:
+      facility:
+        type: string
+        description: facility id
+      propname:
+        type: string
+        description: property name
+      propvalue:
+        type: string
+        description: property value
+    title: ProjectPropertyPut
+  ProjectPut:
+    type: object
+    required:
+    - code
+    - description
+    - startDate
+    - status
+    - title
+    - type
+    properties:
+      code:
+        type: string
+        description: project code
+      description:
+        type: string
+        description: project description
+      endDate:
+        type: string
+        description: 'Last day of project (format: yyyy-mm-dd)'
+      nextReviewDate:
+        type: string
+        description: 'Next review date of project (format: yyyy-mm-dd)'
+      notes:
+        type: string
+        description: project notes
+      requirements:
+        type: string
+        description: project requirements
+      startDate:
+        type: string
+        description: 'First day of project (format: yyyy-mm-dd)'
+      status:
+        type: string
+        description: project status
+      title:
+        type: string
+        description: project title
+      todo:
+        type: string
+        description: project todo
+      type:
+        type: string
+        description: project type
+    title: ProjectPut
+  ProjectWrapper:
+    type: object
+    properties:
+      externalReferences:
+        type: array
+        items:
+          "$ref": "#/definitions/ProjectExternalReferenceGet"
+      members:
+        type: array
+        items:
+          "$ref": "#/definitions/ProjectMemberGet"
+      project:
+        "$ref": "#/definitions/ProjectGet"
+      projectActions:
+        type: array
+        items:
+          "$ref": "#/definitions/ProjectActionGet"
+      projectProperties:
+        type: array
+        items:
+          "$ref": "#/definitions/ProjectPropertyGet"
+      researchOutputs:
+        type: array
+        items:
+          "$ref": "#/definitions/ResearchOutputGet"
+      serviceInstances:
+        type: array
+        items:
+          "$ref": "#/definitions/ServiceInstanceGet"
+    title: ProjectWrapper
+  ResearchOutputGet:
+    type: object
+    required:
+    - dateReported
+    - id
+    - type
+    properties:
+      dateReported:
+        type: string
+        description: date when research output was reported
+      description:
+        type: string
+        description: citation or description
+      doi:
+        type: string
+        description: DOI
+      id:
+        type: integer
+        format: int32
+        description: project research output id
+      type:
+        type: string
+        description: type of research output
+      uri:
+        type: string
+        description: external link
+    title: ResearchOutputGet
+  ResearchOutputPost:
+    type: object
+    required:
+    - dateReported
+    - type
+    properties:
+      dateReported:
+        type: string
+        description: date when research output was reported
+      description:
+        type: string
+        description: citation or description
+      doi:
+        type: string
+        description: DOI
+      type:
+        type: string
+        description: type of research output
+      uri:
+        type: string
+        description: external link
+    title: ResearchOutputPost
+  ResearchOutputPut:
+    type: object
+    required:
+    - dateReported
+    - type
+    properties:
+      dateReported:
+        type: string
+        description: date when research output was reported
+      description:
+        type: string
+        description: citation or description
+      doi:
+        type: string
+        description: DOI
+      type:
+        type: string
+        description: type of research output
+      uri:
+        type: string
+        description: external link
+    title: ResearchOutputPut
+  ServiceGet:
+    type: object
+    required:
+    - drupalId
+    - id
+    - name
+    properties:
+      drupalId:
+        type: integer
+        format: int32
+        description: drupal id of service
+      id:
+        type: integer
+        format: int32
+        description: id of service
+      name:
+        type: string
+        description: name of service
+    title: ServiceGet
+  ServiceInstanceGet:
+    type: object
+    required:
+    - id
+    - instance
+    - schemaVersion
+    - serviceName
+    - status
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: service instance id
+      instance:
+        description: actual service instance. this can an arbitrary JSON object, but
+          it must validate against the requested schema
+        "$ref": "#/definitions/JsonNode"
+      schemaVersion:
+        type: string
+        description: schema version
+      serviceName:
+        type: string
+        description: service name
+      status:
+        type: string
+        description: service instance status
+    title: ServiceInstanceGet
+  ServiceInstancePost:
+    type: object
+    required:
+    - instance
+    - schemaVersion
+    - serviceName
+    - status
+    properties:
+      instance:
+        description: actual service instance. this can an arbitrary JSON object, but
+          it must validate against the requested schema
+        "$ref": "#/definitions/JsonNode"
+      schemaVersion:
+        type: string
+        description: schema version
+      serviceName:
+        type: string
+        description: service name
+      status:
+        type: string
+        description: service instance status
+    title: ServiceInstancePost
+  ServiceInstancePut:
+    type: object
+    required:
+    - instance
+    - schemaVersion
+    - serviceName
+    - status
+    properties:
+      instance:
+        description: actual service instance. this can an arbitrary JSON object, but
+          it must validate against the requested schema
+        "$ref": "#/definitions/JsonNode"
+      schemaVersion:
+        type: string
+        description: schema version
+      serviceName:
+        type: string
+        description: service name
+      status:
+        type: string
+        description: service instance status
+    title: ServiceInstancePut
+  ServiceSchemaGet:
+    type: object
+    required:
+    - id
+    - schema
+    - schemaVersion
+    - serviceId
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: service schema id
+      schema:
+        description: JSON schema for all instances of the service for the specified
+          version
+        "$ref": "#/definitions/JsonNode"
+      schemaVersion:
+        type: string
+        description: schema version
+      serviceId:
+        type: integer
+        format: int32
+        description: service id
+    title: ServiceSchemaGet
+  ServiceSchemaPost:
+    type: object
+    required:
+    - schema
+    - schemaVersion
+    - serviceId
+    properties:
+      schema:
+        description: JSON schema for all instances of the service for the specified
+          version
+        "$ref": "#/definitions/JsonNode"
+      schemaVersion:
+        type: string
+        description: schema version
+      serviceId:
+        type: integer
+        format: int32
+        description: service id
+    title: ServiceSchemaPost
+  ServiceSchemaPut:
+    type: object
+    required:
+    - schema
+    - schemaVersion
+    - serviceId
+    properties:
+      schema:
+        description: JSON schema for all instances of the service for the specified
+          version
+        "$ref": "#/definitions/JsonNode"
+      schemaVersion:
+        type: string
+        description: schema version
+      serviceId:
+        type: integer
+        format: int32
+        description: service id
+    title: ServiceSchemaPut
+
